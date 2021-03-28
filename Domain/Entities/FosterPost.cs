@@ -12,7 +12,7 @@ namespace Domain.Entities
         }
         public string Name { get; set; }
         public string Text { get; set; }
-        public AnimalSpecies Species { get; set; }
+        public AnimalSpecie Specie { get; set; }
         public Guid SpeciesId { get; set; }
         public Guid FosterProfileId { get; set; }
         public FosterProfile FosterProfile { get; set; }

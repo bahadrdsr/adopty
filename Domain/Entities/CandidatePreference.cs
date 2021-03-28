@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public class CandidatePreferences : EntityBase
+    public class CandidatePreference : EntityBase
     {
         public Guid SpeciesId { get; set; }
         public int? MinWeight { get; set; }

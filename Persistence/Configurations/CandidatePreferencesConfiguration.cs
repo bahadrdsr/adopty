@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Configurations
 {
-    public class CandidatePreferencesConfiguration : IEntityTypeConfiguration<CandidatePreferences>
+    public class CandidatePreferenceConfiguration : IEntityTypeConfiguration<CandidatePreference>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<CandidatePreferences> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<CandidatePreference> builder)
         {
-            builder.ToTable("CandidatePreferences");
+            builder.ToTable("CandidatePreference");
         }
     }
 }

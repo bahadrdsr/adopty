@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Persistence.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CandidatePreferences",
+                name: "CandidatePreference",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -64,7 +64,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CandidatePreferences", x => x.Id);
+                    table.PrimaryKey("PK_CandidatePreference", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +81,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FosterPreferences",
+                name: "FosterPreference",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -96,7 +96,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FosterPreferences", x => x.Id);
+                    table.PrimaryKey("PK_FosterPreference", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -293,16 +293,16 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CandidatePreferencesId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CandidatePreferenceId = table.Column<Guid>(type: "uuid", nullable: false),
                     AppUserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CandidateProfiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CandidateProfiles_CandidatePreferences_CandidatePreferences~",
-                        column: x => x.CandidatePreferencesId,
-                        principalTable: "CandidatePreferences",
+                        name: "FK_CandidateProfiles_CandidatePreference_CandidatePreferenceId",
+                        column: x => x.CandidatePreferenceId,
+                        principalTable: "CandidatePreference",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -349,16 +349,16 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FosterPreferencesId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FosterPreferenceId = table.Column<Guid>(type: "uuid", nullable: false),
                     AppUserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FosterProfiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FosterProfiles_FosterPreferences_FosterPreferencesId",
-                        column: x => x.FosterPreferencesId,
-                        principalTable: "FosterPreferences",
+                        name: "FK_FosterProfiles_FosterPreference_FosterPreferenceId",
+                        column: x => x.FosterPreferenceId,
+                        principalTable: "FosterPreference",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -445,7 +445,7 @@ namespace Persistence.Migrations
                     FosterProfileId = table.Column<Guid>(type: "uuid", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    FosterPreferencesId = table.Column<Guid>(type: "uuid", nullable: true),
+                    FosterPreferenceId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedById = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ModifiedById = table.Column<string>(type: "text", nullable: true),
@@ -461,9 +461,9 @@ namespace Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FosterPosts_FosterPreferences_FosterPreferencesId",
-                        column: x => x.FosterPreferencesId,
-                        principalTable: "FosterPreferences",
+                        name: "FK_FosterPosts_FosterPreference_FosterPreferenceId",
+                        column: x => x.FosterPreferenceId,
+                        principalTable: "FosterPreference",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -648,9 +648,9 @@ namespace Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CandidateProfiles_CandidatePreferencesId",
+                name: "IX_CandidateProfiles_CandidatePreferenceId",
                 table: "CandidateProfiles",
-                column: "CandidatePreferencesId",
+                column: "CandidatePreferenceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -694,9 +694,9 @@ namespace Persistence.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FosterPosts_FosterPreferencesId",
+                name: "IX_FosterPosts_FosterPreferenceId",
                 table: "FosterPosts",
-                column: "FosterPreferencesId");
+                column: "FosterPreferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FosterPosts_FosterProfileId",
@@ -720,9 +720,9 @@ namespace Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_FosterProfiles_FosterPreferencesId",
+                name: "IX_FosterProfiles_FosterPreferenceId",
                 table: "FosterProfiles",
-                column: "FosterPreferencesId",
+                column: "FosterPreferenceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -850,7 +850,7 @@ namespace Persistence.Migrations
                 name: "Assets");
 
             migrationBuilder.DropTable(
-                name: "CandidatePreferences");
+                name: "CandidatePreference");
 
             migrationBuilder.DropTable(
                 name: "AnimalSpecies");
@@ -859,7 +859,7 @@ namespace Persistence.Migrations
                 name: "FosterProfiles");
 
             migrationBuilder.DropTable(
-                name: "FosterPreferences");
+                name: "FosterPreference");
 
             migrationBuilder.DropTable(
                 name: "Profile");

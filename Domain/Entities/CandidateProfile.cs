@@ -11,8 +11,8 @@ namespace Domain.Entities
             DislikedPosts = new List<DislikedPost>();
         }
         public bool IsActive { get; set; }
-        public Guid CandidatePreferencesId { get; set; }
-        public CandidatePreferences CandidatePreferences { get; set; }
+        public Guid CandidatePreferenceId { get; set; }
+        public CandidatePreference CandidatePreference { get; set; }
        public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         public ICollection<LikedPost> LikedPosts { get; private set; }

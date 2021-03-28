@@ -10,7 +10,7 @@ namespace Persistence.Configurations
         {
             builder.ToTable("CandidateProfiles");
             
-            builder.HasOne(x => x.CandidatePreferences).WithOne(z => z.CandidateProfile).HasForeignKey<CandidateProfile>(x=>x.CandidatePreferencesId).IsRequired(false);
+            builder.HasOne(x => x.CandidatePreference).WithOne(z => z.CandidateProfile).HasForeignKey<CandidateProfile>(x=>x.CandidatePreferenceId).IsRequired(false);
             builder.HasMany(x=>x.LikedPosts).WithOne(z=>z.CandidateProfile).HasForeignKey(x=>x.CandidateProfileId).IsRequired(true);
             builder.HasMany(x=>x.DislikedPosts).WithOne(z=>z.CandidateProfile).HasForeignKey(x=>x.CandidateProfileId).IsRequired(true);
         }

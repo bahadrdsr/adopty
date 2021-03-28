@@ -1,6 +1,6 @@
 namespace Domain.Entities
 {
-    public class AnimalSpecies : EntityBase
+    public class AnimalSpecie : EntityBase
     {
         public string Name { get; set; }
     }

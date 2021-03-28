@@ -4,9 +4,9 @@ using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public class FosterPreferences : EntityBase
+    public class FosterPreference : EntityBase
     {
-        public FosterPreferences()
+        public FosterPreference()
         {
             Posts = new List<FosterPost>();
         }

@@ -15,8 +15,8 @@ namespace Persistence
             builder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
         }
         public DbSet<Asset> AssetDbSet { get; set; }
-        public DbSet<AnimalSpecies> AnimalSpeciesDbSet { get; set; }
-        public DbSet<CandidatePreferences> CandidatePreferencesDbSet { get; set; }
+        public DbSet<AnimalSpecie> AnimalSpecieDbSet { get; set; }
+        public DbSet<CandidatePreference> CandidatePreferenceDbSet { get; set; }
         public DbSet<CandidateProfile> CandidateProfileDbSet { get; set; }
         public DbSet<City> CityDbSet { get; set; }
         public DbSet<Conversation> ConversationDbSet { get; set; }
@@ -24,7 +24,7 @@ namespace Persistence
         public DbSet<DislikedCandidate> DislikedCandidateDbSet { get; set; }
         public DbSet<DislikedPost> DislikedPostDbSet { get; set; }
         public DbSet<FosterPost> FosterPostDbSet { get; set; }
-        public DbSet<FosterPreferences> FosterPreferencesDbSet { get; set; }
+        public DbSet<FosterPreference> FosterPreferenceDbSet { get; set; }
         public DbSet<FosterProfile> FosterProfileDbSet { get; set; }
         public DbSet<LikedCandidate> LikedCandidateDbSet { get; set; }
         public DbSet<LikedPost> LikedPostDbSet { get; set; }

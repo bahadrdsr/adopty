@@ -11,7 +11,7 @@ namespace Persistence.Configurations
         {
             builder.ToTable("FosterProfiles");
             
-            builder.HasOne(x => x.FosterPreferences).WithOne(z => z.FosterProfile).HasForeignKey<FosterProfile>(x=>x.FosterPreferencesId).IsRequired(false);
+            builder.HasOne(x => x.FosterPreference).WithOne(z => z.FosterProfile).HasForeignKey<FosterProfile>(x=>x.FosterPreferenceId).IsRequired(false);
             builder.HasMany(x => x.Posts).WithOne(z => z.FosterProfile).HasForeignKey(x => x.FosterProfileId).IsRequired(false);
             builder.HasMany(x => x.LikedCandidates).WithOne(z => z.FosterProfile).HasForeignKey(x => x.FosterProfileId).IsRequired(false);
             builder.HasMany(x => x.DislikedCandidates).WithOne(z => z.FosterProfile).HasForeignKey(x => x.FosterProfileId).IsRequired(false);
