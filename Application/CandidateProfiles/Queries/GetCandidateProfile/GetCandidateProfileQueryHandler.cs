@@ -22,9 +22,9 @@ namespace Application.CandidateProfiles.Queries.GetCandidateProfile
             this._mapper = mapper;
         }
 
-        public Task<CandidateProfileDto> Handle(GetCandidateProfileQuery request, CancellationToken cancellationToken)
+        public async Task<CandidateProfileDto> Handle(GetCandidateProfileQuery request, CancellationToken cancellationToken)
         {
-            var cp = _context.CandidateProfileDbSet.Where(x => x.AppUserId == request.AppUserId).ProjectTo<CandidateProfileDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+            var cp = await _context.CandidateProfileDbSet.Where(x => x.AppUserId == request.AppUserId && x.IsActive == true).ProjectTo<CandidateProfileDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
             return cp;
         }
     }
