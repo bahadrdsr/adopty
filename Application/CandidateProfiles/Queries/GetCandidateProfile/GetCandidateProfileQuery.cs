@@ -1,7 +1,7 @@
 using Application.Common.Dtos;
 using MediatR;
 
-namespace Application.CandidatePreferences.Queries.GetCandidateProfile
+namespace Application.CandidateProfiles.Queries.GetCandidateProfile
 {
     public class GetCandidateProfileQuery : IRequest<CandidateProfileDto>
     {
