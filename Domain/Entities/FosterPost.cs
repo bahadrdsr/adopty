@@ -19,6 +19,13 @@ namespace Domain.Entities
         public Gender Gender { get; set; }
         public FosterPostStatus Status { get; set; }
 
+        public double Weight { get; set; }
+        public double Age { get; set; }
+
+        public bool IsFriendlyWithPets { get; set; }
+
+        public bool IsFriendlyWithPeople { get; set; }
+
         public virtual ICollection<FosterPostAsset> Assets { get; private set; }
 
     }
