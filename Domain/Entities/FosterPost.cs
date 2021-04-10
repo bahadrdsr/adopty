@@ -22,9 +22,8 @@ namespace Domain.Entities
         public double Weight { get; set; }
         public double Age { get; set; }
 
-        public bool IsFriendlyWithPets { get; set; }
-
-        public bool IsFriendlyWithPeople { get; set; }
+        public FriendlyWithPeople FriendlyWithPeople { get; set; }
+        public FriendlyWithPets FriendlyWithPets { get; set; }
 
         public virtual ICollection<FosterPostAsset> Assets { get; private set; }
 

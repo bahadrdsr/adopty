@@ -5,11 +5,11 @@ namespace Domain.Entities
 {
     public class CandidatePreference : EntityBase
     {
-        public Guid SpeciesId { get; set; }
-        public int? MinWeight { get; set; }
-        public int? MaxWeight { get; set; }
-        public int? MinAge { get; set; }
-        public int? MaxAge { get; set; }
+        public Guid? SpeciesId { get; set; }
+        public double? MinWeight { get; set; }
+        public double? MaxWeight { get; set; }
+        public double? MinAge { get; set; }
+        public double? MaxAge { get; set; }
         public FriendlyWithPeople FriendlyWithPeople { get; set; }
         public FriendlyWithPets FriendlyWithPets { get; set; }
 

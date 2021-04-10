@@ -27,12 +27,56 @@ namespace Application.FosterPosts.Queries.GetRecommendedPosts
             var profile = await _context.CandidateProfileDbSet.Where(x => x.AppUserId == _userAccessor.UserId).FirstOrDefaultAsync();
             var candidatePref = profile.CandidatePreference;
 
-            var fosterPref = await _context.FosterPostDbSet
+            var query = _context.FosterPostDbSet
             .Where(
-                x => 
-                x.FosterProfile == candidatePref.FriendlyWithPeople
-            )
-            .Skip(request.PageNumber - 1).Take(request.PageSize).ToListAsync();
+                x =>
+                x.FriendlyWithPeople == candidatePref.FriendlyWithPeople
+                && x.FriendlyWithPets == candidatePref.FriendlyWithPets
+            );
+            if (candidatePref.MaxWeight != null)
+            {
+                query.Where(
+                                x =>
+                                x.Weight <= candidatePref.MaxWeight
+                            );
+            }
+            if (candidatePref.MinWeight != null)
+            {
+                query.Where(
+                                x =>
+                                x.Weight >= candidatePref.MinWeight
+                            );
+            }
+            if (candidatePref.MinAge != null)
+            {
+                query.Where(
+                                x =>
+                                x.Age >= candidatePref.MinAge
+                            );
+            }
+            if (candidatePref.MaxAge != null)
+            {
+                query.Where(
+                                x =>
+                                x.Age <= candidatePref.MaxAge
+                            );
+            }
+            if (candidatePref.SpeciesId != null)
+            {
+                query.Where(
+                              x =>
+                              x.SpeciesId == candidatePref.SpeciesId
+                          );
+            }
+
+            var data = await query.Skip(request.PageNumber - 1).Take(request.PageSize).ToListAsync();
+            var vm = new RecommendedPostsVm
+            {
+                Posts = data,
+                ShowCount = request.PageSize
+            };
+            return vm;
+            // .Skip(request.PageNumber - 1).Take(request.PageSize).ToListAsync();
         }
     }
 }
