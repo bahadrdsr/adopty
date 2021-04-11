@@ -11,7 +11,7 @@ namespace Domain.Entities
             LikedCandidates = new List<LikedCandidate>();
             DislikedCandidates = new List<DislikedCandidate>();
         }
-        public Guid FosterPreferenceId { get; set; }
+        public Guid? FosterPreferenceId { get; set; }
         public FosterPreference FosterPreference { get; set; }
         public ICollection<FosterPost> Posts { get; private set; }
         public ICollection<LikedCandidate> LikedCandidates { get; private set; }

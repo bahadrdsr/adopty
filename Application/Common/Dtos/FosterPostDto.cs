@@ -22,5 +22,9 @@ namespace Application.Common.Dtos
         public DateTime CreatedDate { get; set; }
         public string ModifiedById { get; set; }
         public DateTime ModifiedDate { get; set; }
+        public void Mapping(AutoMapper.Profile profile)
+        {
+            profile.CreateMap<FosterPost, FosterPostDto>();
+        }
     }
 }

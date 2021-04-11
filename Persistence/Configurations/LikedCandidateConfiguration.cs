@@ -8,7 +8,7 @@ namespace Persistence.Configurations
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<LikedCandidate> builder)
         {
             builder.ToTable("LikedCandidates");
-            builder.HasKey(x => new { x.CandidateId, x.FosterProfileId });
+            builder.HasKey(x => new { x.CandidateProfileId, x.FosterProfileId });
         }
     }
 }

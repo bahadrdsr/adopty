@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Application.Common.Mappings;
 using Domain.Entities;
@@ -6,6 +7,7 @@ namespace Application.Common.Dtos
 {
     public class ConversationSummaryDto : IMapFrom<Conversation>
     {
+        public Guid Id { get; set; }
         public AppUserDto FosterUser { get; set; }
         public AppUserDto CandidateUser { get; set; }
         public void Mapping(AutoMapper.Profile profile)
