@@ -38,9 +38,27 @@ namespace Application.Users.Commands.Register
 
             var result = await _userManager.CreateAsync(user, request.Password);
 
+            var fosterPref = new FosterPreference
+            {
+                MinimumAge = 0,
+                AlreadyHasPets = false,
+                FriendlyWithPeople = Domain.Enums.FriendlyWithPeople.NotSure,
+                FriendlyWithPets = Domain.Enums.FriendlyWithPets.NotSure,
+                HasExperience = false,
+                ProfileInfoExists = false,
+            };
+            await _context.FosterPreferenceDbSet.AddAsync(fosterPref);
+            var fp = new FosterProfile
+            {
+                AppUserId = user.Id,
+                FosterPreference = fosterPref,
+                Info = null,
+            };
+            await _context.FosterProfileDbSet.AddAsync(fp);
+            await _context.SaveChangesAsync(cancellationToken);
             if (result.Succeeded)
             {
-                  return new CurrentUserDto
+                return new CurrentUserDto
                 {
                     Token = _jwtGenerator.CreateToken(user),
                     Username = user.UserName,
