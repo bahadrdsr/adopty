@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations
 {
-    public class CandidateProfileConfiguration : IEntityTypeConfiguration<CandidateProfile>
+    public class CandidateProfileConfiguration : ProfileConfiguration<CandidateProfile>
     {
         public void Configure(EntityTypeBuilder<CandidateProfile> builder)
         {

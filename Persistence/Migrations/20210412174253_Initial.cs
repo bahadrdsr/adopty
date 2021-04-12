@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Persistence.Migrations
 {
-    public partial class InitialEntities : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,22 +49,22 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CandidatePreference",
+                name: "CandidatePreferences",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SpeciesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    MinWeight = table.Column<int>(type: "integer", nullable: true),
-                    MaxWeight = table.Column<int>(type: "integer", nullable: true),
-                    MinAge = table.Column<int>(type: "integer", nullable: true),
-                    MaxAge = table.Column<int>(type: "integer", nullable: true),
+                    SpeciesId = table.Column<Guid>(type: "uuid", nullable: true),
+                    MinWeight = table.Column<double>(type: "double precision", nullable: true),
+                    MaxWeight = table.Column<double>(type: "double precision", nullable: true),
+                    MinAge = table.Column<double>(type: "double precision", nullable: true),
+                    MaxAge = table.Column<double>(type: "double precision", nullable: true),
                     FriendlyWithPeople = table.Column<int>(type: "integer", nullable: false),
                     FriendlyWithPets = table.Column<int>(type: "integer", nullable: false),
                     CandidateProfileId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CandidatePreference", x => x.Id);
+                    table.PrimaryKey("PK_CandidatePreferences", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +81,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FosterPreference",
+                name: "FosterPreferences",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -96,19 +96,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FosterPreference", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Profile",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Info = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profile", x => x.Id);
+                    table.PrimaryKey("PK_FosterPreferences", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,30 +164,6 @@ namespace Persistence.Migrations
                         principalTable: "Countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProfileAssets",
-                columns: table => new
-                {
-                    ProfileId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AssetId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProfileAssets", x => new { x.ProfileId, x.AssetId });
-                    table.ForeignKey(
-                        name: "FK_ProfileAssets_Assets_AssetId",
-                        column: x => x.AssetId,
-                        principalTable: "Assets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProfileAssets_Profile_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -288,38 +252,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CandidateProfiles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CandidatePreferenceId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppUserId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CandidateProfiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CandidateProfiles_CandidatePreference_CandidatePreferenceId",
-                        column: x => x.CandidatePreferenceId,
-                        principalTable: "CandidatePreference",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CandidateProfiles_Profile_Id",
-                        column: x => x.Id,
-                        principalTable: "Profile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CandidateProfiles_Users_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Conversations",
                 columns: table => new
                 {
@@ -345,31 +277,42 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FosterProfiles",
+                name: "Profile",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FosterPreferenceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Info = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
+                    Discriminator = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: true),
+                    CandidatePreferenceId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CandidateProfile_AppUserId = table.Column<string>(type: "text", nullable: true),
+                    FosterPreferenceId = table.Column<Guid>(type: "uuid", nullable: true),
                     AppUserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FosterProfiles", x => x.Id);
+                    table.PrimaryKey("PK_Profile", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FosterProfiles_FosterPreference_FosterPreferenceId",
-                        column: x => x.FosterPreferenceId,
-                        principalTable: "FosterPreference",
+                        name: "FK_Profile_CandidatePreferences_CandidatePreferenceId",
+                        column: x => x.CandidatePreferenceId,
+                        principalTable: "CandidatePreferences",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FosterProfiles_Profile_Id",
-                        column: x => x.Id,
-                        principalTable: "Profile",
+                        name: "FK_Profile_FosterPreferences_FosterPreferenceId",
+                        column: x => x.FosterPreferenceId,
+                        principalTable: "FosterPreferences",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FosterProfiles_Users_AppUserId",
+                        name: "FK_Profile_Users_AppUserId",
                         column: x => x.AppUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Profile_Users_CandidateProfile_AppUserId",
+                        column: x => x.CandidateProfile_AppUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -421,17 +364,17 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_DislikedCandidates", x => new { x.CandidateId, x.FosterProfileId });
                     table.ForeignKey(
-                        name: "FK_DislikedCandidates_CandidateProfiles_CandidateProfileId",
+                        name: "FK_DislikedCandidates_Profile_CandidateProfileId",
                         column: x => x.CandidateProfileId,
-                        principalTable: "CandidateProfiles",
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DislikedCandidates_FosterProfiles_FosterProfileId",
+                        name: "FK_DislikedCandidates_Profile_FosterProfileId",
                         column: x => x.FosterProfileId,
-                        principalTable: "FosterProfiles",
+                        principalTable: "Profile",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -445,7 +388,12 @@ namespace Persistence.Migrations
                     FosterProfileId = table.Column<Guid>(type: "uuid", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
+                    Weight = table.Column<double>(type: "double precision", nullable: false),
+                    Age = table.Column<double>(type: "double precision", nullable: false),
+                    FriendlyWithPeople = table.Column<int>(type: "integer", nullable: false),
+                    FriendlyWithPets = table.Column<int>(type: "integer", nullable: false),
                     FosterPreferenceId = table.Column<Guid>(type: "uuid", nullable: true),
+                    FosterProfileId1 = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedById = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ModifiedById = table.Column<string>(type: "text", nullable: true),
@@ -461,15 +409,21 @@ namespace Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FosterPosts_FosterPreference_FosterPreferenceId",
+                        name: "FK_FosterPosts_FosterPreferences_FosterPreferenceId",
                         column: x => x.FosterPreferenceId,
-                        principalTable: "FosterPreference",
+                        principalTable: "FosterPreferences",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FosterPosts_FosterProfiles_FosterProfileId",
+                        name: "FK_FosterPosts_Profile_FosterProfileId",
                         column: x => x.FosterProfileId,
-                        principalTable: "FosterProfiles",
+                        principalTable: "Profile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FosterPosts_Profile_FosterProfileId1",
+                        column: x => x.FosterProfileId1,
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -490,23 +444,53 @@ namespace Persistence.Migrations
                 name: "LikedCandidates",
                 columns: table => new
                 {
-                    CandidateId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FosterProfileId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CandidateProfileId = table.Column<Guid>(type: "uuid", nullable: true)
+                    CandidateProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FosterProfileId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LikedCandidates", x => new { x.CandidateId, x.FosterProfileId });
+                    table.PrimaryKey("PK_LikedCandidates", x => new { x.CandidateProfileId, x.FosterProfileId });
                     table.ForeignKey(
-                        name: "FK_LikedCandidates_CandidateProfiles_CandidateProfileId",
+                        name: "FK_LikedCandidates_Profile_CandidateProfileId",
                         column: x => x.CandidateProfileId,
-                        principalTable: "CandidateProfiles",
+                        principalTable: "Profile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LikedCandidates_Profile_FosterProfileId",
+                        column: x => x.FosterProfileId,
+                        principalTable: "Profile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfileAssets",
+                columns: table => new
+                {
+                    ProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssetId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProfileId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfileAssets", x => new { x.ProfileId, x.AssetId });
+                    table.ForeignKey(
+                        name: "FK_ProfileAssets_Assets_AssetId",
+                        column: x => x.AssetId,
+                        principalTable: "Assets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProfileAssets_Profile_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LikedCandidates_FosterProfiles_FosterProfileId",
-                        column: x => x.FosterProfileId,
-                        principalTable: "FosterProfiles",
+                        name: "FK_ProfileAssets_Profile_ProfileId1",
+                        column: x => x.ProfileId1,
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -522,15 +506,15 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_DislikedPosts", x => new { x.CandidateProfileId, x.PostId });
                     table.ForeignKey(
-                        name: "FK_DislikedPosts_CandidateProfiles_CandidateProfileId",
-                        column: x => x.CandidateProfileId,
-                        principalTable: "CandidateProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_DislikedPosts_FosterPosts_PostId",
                         column: x => x.PostId,
                         principalTable: "FosterPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DislikedPosts_Profile_CandidateProfileId",
+                        column: x => x.CandidateProfileId,
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -570,15 +554,15 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_LikedPosts", x => new { x.PostId, x.CandidateProfileId });
                     table.ForeignKey(
-                        name: "FK_LikedPosts_CandidateProfiles_CandidateProfileId",
-                        column: x => x.CandidateProfileId,
-                        principalTable: "CandidateProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_LikedPosts_FosterPosts_PostId",
                         column: x => x.PostId,
                         principalTable: "FosterPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LikedPosts_Profile_CandidateProfileId",
+                        column: x => x.CandidateProfileId,
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -642,18 +626,6 @@ namespace Persistence.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CandidateProfiles_AppUserId",
-                table: "CandidateProfiles",
-                column: "AppUserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CandidateProfiles_CandidatePreferenceId",
-                table: "CandidateProfiles",
-                column: "CandidatePreferenceId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Cities_CountryId",
                 table: "Cities",
                 column: "CountryId");
@@ -704,6 +676,11 @@ namespace Persistence.Migrations
                 column: "FosterProfileId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FosterPosts_FosterProfileId1",
+                table: "FosterPosts",
+                column: "FosterProfileId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FosterPosts_ModifiedById",
                 table: "FosterPosts",
                 column: "ModifiedById");
@@ -712,23 +689,6 @@ namespace Persistence.Migrations
                 name: "IX_FosterPosts_SpeciesId",
                 table: "FosterPosts",
                 column: "SpeciesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FosterProfiles_AppUserId",
-                table: "FosterProfiles",
-                column: "AppUserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FosterProfiles_FosterPreferenceId",
-                table: "FosterProfiles",
-                column: "FosterPreferenceId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LikedCandidates_CandidateProfileId",
-                table: "LikedCandidates",
-                column: "CandidateProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LikedCandidates_FosterProfileId",
@@ -771,9 +731,38 @@ namespace Persistence.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Profile_AppUserId",
+                table: "Profile",
+                column: "AppUserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Profile_CandidatePreferenceId",
+                table: "Profile",
+                column: "CandidatePreferenceId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Profile_CandidateProfile_AppUserId",
+                table: "Profile",
+                column: "CandidateProfile_AppUserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Profile_FosterPreferenceId",
+                table: "Profile",
+                column: "FosterPreferenceId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProfileAssets_AssetId",
                 table: "ProfileAssets",
                 column: "AssetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfileAssets_ProfileId1",
+                table: "ProfileAssets",
+                column: "ProfileId1");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -838,9 +827,6 @@ namespace Persistence.Migrations
                 name: "Countries");
 
             migrationBuilder.DropTable(
-                name: "CandidateProfiles");
-
-            migrationBuilder.DropTable(
                 name: "FosterPosts");
 
             migrationBuilder.DropTable(
@@ -850,19 +836,16 @@ namespace Persistence.Migrations
                 name: "Assets");
 
             migrationBuilder.DropTable(
-                name: "CandidatePreference");
-
-            migrationBuilder.DropTable(
                 name: "AnimalSpecies");
 
             migrationBuilder.DropTable(
-                name: "FosterProfiles");
-
-            migrationBuilder.DropTable(
-                name: "FosterPreference");
-
-            migrationBuilder.DropTable(
                 name: "Profile");
+
+            migrationBuilder.DropTable(
+                name: "CandidatePreferences");
+
+            migrationBuilder.DropTable(
+                name: "FosterPreferences");
 
             migrationBuilder.DropTable(
                 name: "Users");

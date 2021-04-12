@@ -16,6 +16,7 @@ namespace Persistence
             var adminuser = await SeedUsers(userManager, context);
             var countryId = await SeedCountries(context);
             await SeedCities(context, countryId);
+            await SeedSpecies(context);
         }
 
         public static async Task<AppUser> SeedUsers(UserManager<AppUser> userManager, DataContext context)
@@ -43,13 +44,18 @@ namespace Persistence
                         ProfileInfoExists = false,
                     };
                     await context.FosterPreferenceDbSet.AddAsync(fosterPref);
+                    await context.SaveChangesAsync();
                     var fp = new FosterProfile
                     {
                         AppUserId = user.Id,
-                        FosterPreference = fosterPref,
+                        FosterPreferenceId = fosterPref.Id,
                         Info = null,
                     };
                     await context.FosterProfileDbSet.AddAsync(fp);
+                    await context.SaveChangesAsync();
+
+                    // fosterPref.FosterProfileId = fp.Id;
+                    // context.FosterPreferenceDbSet.Update(fosterPref);
 
                     var candidatePref = new CandidatePreference
                     {
@@ -62,16 +68,21 @@ namespace Persistence
                         SpeciesId = null
                     };
                     await context.CandidatePreferenceDbSet.AddAsync(candidatePref);
+                    await context.SaveChangesAsync();
 
                     var cp = new CandidateProfile
                     {
                         AppUserId = user.Id,
-                        CandidatePreference = candidatePref,
+                        CandidatePreferenceId = candidatePref.Id,
                         Info = null,
                         IsActive = true,
                     };
                     await context.CandidateProfileDbSet.AddAsync(cp);
                     await context.SaveChangesAsync();
+
+                    user.FosterProfileId = fp.Id;
+                    user.CandidateProfileId = cp.Id;
+                    await userManager.UpdateAsync(user);
                     userManager.AddToRoleAsync(user,
                                         "member").Wait();
                 }
@@ -98,10 +109,11 @@ namespace Persistence
                         ProfileInfoExists = false,
                     };
                     await context.FosterPreferenceDbSet.AddAsync(fosterPref);
+                    await context.SaveChangesAsync();
                     var fp = new FosterProfile
                     {
                         AppUserId = user.Id,
-                        FosterPreference = fosterPref,
+                        FosterPreferenceId = fosterPref.Id,
                         Info = null,
                     };
                     await context.FosterProfileDbSet.AddAsync(fp);
@@ -117,16 +129,20 @@ namespace Persistence
                         SpeciesId = null
                     };
                     await context.CandidatePreferenceDbSet.AddAsync(candidatePref);
+                    await context.SaveChangesAsync();
 
                     var cp = new CandidateProfile
                     {
                         AppUserId = user.Id,
-                        CandidatePreference = candidatePref,
+                        CandidatePreferenceId = candidatePref.Id,
                         Info = null,
                         IsActive = true,
                     };
                     await context.CandidateProfileDbSet.AddAsync(cp);
                     await context.SaveChangesAsync();
+                    user.FosterProfileId = fp.Id;
+                    user.CandidateProfileId = cp.Id;
+                    await userManager.UpdateAsync(user);
                     userManager.AddToRoleAsync(user,
                                         "member").Wait();
                 }
@@ -153,10 +169,11 @@ namespace Persistence
                         ProfileInfoExists = false,
                     };
                     await context.FosterPreferenceDbSet.AddAsync(fosterPref);
+                    await context.SaveChangesAsync();
                     var fp = new FosterProfile
                     {
                         AppUserId = user.Id,
-                        FosterPreference = fosterPref,
+                        FosterPreferenceId = fosterPref.Id,
                         Info = null,
                     };
                     await context.FosterProfileDbSet.AddAsync(fp);
@@ -172,16 +189,20 @@ namespace Persistence
                         SpeciesId = null
                     };
                     await context.CandidatePreferenceDbSet.AddAsync(candidatePref);
+                    await context.SaveChangesAsync();
 
                     var cp = new CandidateProfile
                     {
                         AppUserId = user.Id,
-                        CandidatePreference = candidatePref,
+                        CandidatePreferenceId = candidatePref.Id,
                         Info = null,
                         IsActive = true,
                     };
                     await context.CandidateProfileDbSet.AddAsync(cp);
                     await context.SaveChangesAsync();
+                    user.FosterProfileId = fp.Id;
+                    user.CandidateProfileId = cp.Id;
+                    await userManager.UpdateAsync(user);
                     userManager.AddToRoleAsync(user,
                                         "member").Wait();
                 }
@@ -237,6 +258,9 @@ namespace Persistence
                     };
                     await context.CandidateProfileDbSet.AddAsync(cp);
                     await context.SaveChangesAsync();
+                    user.FosterProfileId = fp.Id;
+                    user.CandidateProfileId = cp.Id;
+                    await userManager.UpdateAsync(user);
                     userManager.AddToRoleAsync(user,
                                         "administrator").Wait();
                 }
@@ -269,7 +293,7 @@ namespace Persistence
             var tr = new Country
             {
                 Abbreviation = "TR",
-                Name = "Turkey"
+                Name = "Türkiye"
             };
             await context.CountryDbSet.AddAsync(tr);
 
@@ -286,6 +310,26 @@ namespace Persistence
                 await context.CityDbSet.AddAsync(new City { CountryId = countryId, Name = c });
             }
 
+            await context.SaveChangesAsync();
+        }
+        public static async Task SeedSpecies(DataContext context)
+        {
+            var species = new List<AnimalSpecie>{
+                new AnimalSpecie{
+                Name = "Kedi",
+            },
+            new AnimalSpecie{
+                Name = "Köpek"
+            },
+            new AnimalSpecie{
+                Name = "Tavşan"
+            },
+            new AnimalSpecie{
+                Name = "Kuş"
+            },
+           };
+
+            await context.AnimalSpecieDbSet.AddRangeAsync(species);
             await context.SaveChangesAsync();
         }
 

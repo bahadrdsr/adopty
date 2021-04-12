@@ -10,8 +10,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210328190320_InitialEntities")]
-    partial class InitialEntities
+    [Migration("20210412174253_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -146,24 +146,24 @@ namespace Persistence.Migrations
                     b.Property<int>("FriendlyWithPets")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("MaxAge")
-                        .HasColumnType("integer");
+                    b.Property<double?>("MaxAge")
+                        .HasColumnType("double precision");
 
-                    b.Property<int?>("MaxWeight")
-                        .HasColumnType("integer");
+                    b.Property<double?>("MaxWeight")
+                        .HasColumnType("double precision");
 
-                    b.Property<int?>("MinAge")
-                        .HasColumnType("integer");
+                    b.Property<double?>("MinAge")
+                        .HasColumnType("double precision");
 
-                    b.Property<int?>("MinWeight")
-                        .HasColumnType("integer");
+                    b.Property<double?>("MinWeight")
+                        .HasColumnType("double precision");
 
-                    b.Property<Guid>("SpeciesId")
+                    b.Property<Guid?>("SpeciesId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CandidatePreference");
+                    b.ToTable("CandidatePreferences");
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
@@ -272,6 +272,9 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<double>("Age")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("CreatedById")
                         .HasColumnType("text");
 
@@ -283,6 +286,15 @@ namespace Persistence.Migrations
 
                     b.Property<Guid>("FosterProfileId")
                         .HasColumnType("uuid");
+
+                    b.Property<Guid?>("FosterProfileId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("FriendlyWithPeople")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FriendlyWithPets")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
@@ -308,6 +320,9 @@ namespace Persistence.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("character varying(1024)");
 
+                    b.Property<double>("Weight")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -315,6 +330,8 @@ namespace Persistence.Migrations
                     b.HasIndex("FosterPreferenceId");
 
                     b.HasIndex("FosterProfileId");
+
+                    b.HasIndex("FosterProfileId1");
 
                     b.HasIndex("ModifiedById");
 
@@ -370,23 +387,18 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FosterPreference");
+                    b.ToTable("FosterPreferences");
                 });
 
             modelBuilder.Entity("Domain.Entities.LikedCandidate", b =>
                 {
-                    b.Property<Guid>("CandidateId")
+                    b.Property<Guid>("CandidateProfileId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("FosterProfileId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CandidateProfileId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("CandidateId", "FosterProfileId");
-
-                    b.HasIndex("CandidateProfileId");
+                    b.HasKey("CandidateProfileId", "FosterProfileId");
 
                     b.HasIndex("FosterProfileId");
 
@@ -478,6 +490,10 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Info")
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
@@ -485,6 +501,8 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Profile");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Profile");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProfileAsset", b =>
@@ -495,9 +513,14 @@ namespace Persistence.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ProfileId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("ProfileId", "AssetId");
 
                     b.HasIndex("AssetId");
+
+                    b.HasIndex("ProfileId1");
 
                     b.ToTable("ProfileAssets");
                 });
@@ -637,9 +660,10 @@ namespace Persistence.Migrations
                     b.HasBaseType("Domain.Entities.Profile");
 
                     b.Property<string>("AppUserId")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("CandidateProfile_AppUserId");
 
-                    b.Property<Guid>("CandidatePreferenceId")
+                    b.Property<Guid?>("CandidatePreferenceId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
@@ -651,7 +675,7 @@ namespace Persistence.Migrations
                     b.HasIndex("CandidatePreferenceId")
                         .IsUnique();
 
-                    b.ToTable("CandidateProfiles");
+                    b.HasDiscriminator().HasValue("CandidateProfile");
                 });
 
             modelBuilder.Entity("Domain.Entities.FosterProfile", b =>
@@ -661,7 +685,7 @@ namespace Persistence.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("FosterPreferenceId")
+                    b.Property<Guid?>("FosterPreferenceId")
                         .HasColumnType("uuid");
 
                     b.HasIndex("AppUserId")
@@ -670,7 +694,7 @@ namespace Persistence.Migrations
                     b.HasIndex("FosterPreferenceId")
                         .IsUnique();
 
-                    b.ToTable("FosterProfiles");
+                    b.HasDiscriminator().HasValue("FosterProfile");
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
@@ -711,7 +735,9 @@ namespace Persistence.Migrations
 
                     b.HasOne("Domain.Entities.FosterProfile", "FosterProfile")
                         .WithMany("DislikedCandidates")
-                        .HasForeignKey("FosterProfileId");
+                        .HasForeignKey("FosterProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CandidateProfile");
 
@@ -748,8 +774,12 @@ namespace Persistence.Migrations
                         .HasForeignKey("FosterPreferenceId");
 
                     b.HasOne("Domain.Entities.FosterProfile", "FosterProfile")
-                        .WithMany("Posts")
+                        .WithMany()
                         .HasForeignKey("FosterProfileId");
+
+                    b.HasOne("Domain.Entities.FosterProfile", null)
+                        .WithMany("Posts")
+                        .HasForeignKey("FosterProfileId1");
 
                     b.HasOne("Domain.Entities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -791,11 +821,15 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.CandidateProfile", "CandidateProfile")
                         .WithMany()
-                        .HasForeignKey("CandidateProfileId");
+                        .HasForeignKey("CandidateProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.FosterProfile", "FosterProfile")
                         .WithMany("LikedCandidates")
-                        .HasForeignKey("FosterProfileId");
+                        .HasForeignKey("FosterProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CandidateProfile");
 
@@ -881,9 +915,13 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Profile", "Profile")
+                    b.HasOne("Domain.Entities.Profile", null)
                         .WithMany("Photos")
                         .HasForeignKey("ProfileId");
+
+                    b.HasOne("Domain.Entities.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId1");
 
                     b.Navigation("Asset");
 
@@ -951,12 +989,6 @@ namespace Persistence.Migrations
                         .WithOne("CandidateProfile")
                         .HasForeignKey("Domain.Entities.CandidateProfile", "CandidatePreferenceId");
 
-                    b.HasOne("Domain.Entities.Profile", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.CandidateProfile", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("AppUser");
 
                     b.Navigation("CandidatePreference");
@@ -971,12 +1003,6 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entities.FosterPreference", "FosterPreference")
                         .WithOne("FosterProfile")
                         .HasForeignKey("Domain.Entities.FosterProfile", "FosterPreferenceId");
-
-                    b.HasOne("Domain.Entities.Profile", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.FosterProfile", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("AppUser");
 

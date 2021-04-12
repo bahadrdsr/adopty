@@ -8,8 +8,8 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<FosterPreference> builder)
         {
-            builder.ToTable("FosterPreference");
-            builder.HasOne(x => x.FosterProfile).WithOne(z => z.FosterPreference).HasForeignKey<FosterProfile>(x => x.AppUserId).IsRequired(false);
+            builder.ToTable("FosterPreferences");
+            builder.HasOne(x => x.FosterProfile).WithOne(z => z.FosterPreference).HasForeignKey<FosterProfile>(x => x.FosterPreferenceId).IsRequired(false);
         }
     }
 }
