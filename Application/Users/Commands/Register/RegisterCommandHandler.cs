@@ -55,6 +55,27 @@ namespace Application.Users.Commands.Register
                 Info = null,
             };
             await _context.FosterProfileDbSet.AddAsync(fp);
+
+            var candidatePref = new CandidatePreference
+            {
+                FriendlyWithPeople = Domain.Enums.FriendlyWithPeople.NotSure,
+                FriendlyWithPets = Domain.Enums.FriendlyWithPets.NotSure,
+                MaxAge = null,
+                MaxWeight = null,
+                MinAge = null,
+                MinWeight = null,
+                SpeciesId = null
+            };
+            await _context.CandidatePreferenceDbSet.AddAsync(candidatePref);
+
+            var cp = new CandidateProfile
+            {
+                AppUserId = user.Id,
+                CandidatePreference = candidatePref,
+                Info = null,
+                IsActive = true,
+            };
+            await _context.CandidateProfileDbSet.AddAsync(cp);
             await _context.SaveChangesAsync(cancellationToken);
             if (result.Succeeded)
             {
