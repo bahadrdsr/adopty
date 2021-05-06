@@ -25,7 +25,7 @@ namespace Application.FosterProfiles.Queries.GetFosterProfile
         }
         public async Task<FosterProfileDto> Handle(GetFosterProfileQuery request, CancellationToken cancellationToken)
         {
-            var fp = await _context.FosterProfileDbSet.Where(x => x.AppUserId == _userAccessor.UserId)
+            var fp = await _context.FosterProfileDbSet.Where(x => x.AppUserId == _userAccessor.UserId).Include(x=>x.FosterPreference)
             .ProjectTo<FosterProfileDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
 

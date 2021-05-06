@@ -2,7 +2,8 @@
     package="com.example.client_mobile">
    <application
         android:label="client_mobile"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

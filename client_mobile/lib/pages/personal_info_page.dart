@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-class PersonalInfoScreen extends StatelessWidget {
+class PersonalInfoPage extends StatefulWidget {
+  @override
+  _PersonalInfoPageState createState() => _PersonalInfoPageState();
+}
+
+class _PersonalInfoPageState extends State<PersonalInfoPage> {
+  bool _adoptSwitchVal = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,28 +23,40 @@ class PersonalInfoScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Start Searching'),
+              title: Text(
+                'Aramaya başlayın',
+                style: TextStyle(fontSize: 16),
+              ),
               onTap: () {
                 // Update the state of the app.
                 // ...
               },
             ),
             ListTile(
-              title: Text('Personal Info'),
+              title: Text(
+                'Kişisel Bilgileriniz',
+                style: TextStyle(fontSize: 16),
+              ),
               onTap: () {
                 // Update the state of the app.
                 // ...
               },
             ),
             ListTile(
-              title: Text('Foster Profile'),
+              title: Text(
+                'Sahiplendirici Profiliniz',
+                style: TextStyle(fontSize: 16),
+              ),
               onTap: () {
                 // Update the state of the app.
                 // ...
               },
             ),
             ListTile(
-              title: Text('Candidate Profile'),
+              title: Text(
+                'Sahip adayı Profiliniz',
+                style: TextStyle(fontSize: 16),
+              ),
               onTap: () {
                 // Update the state of the app.
                 // ...
@@ -51,7 +69,7 @@ class PersonalInfoScreen extends StatelessWidget {
         shadowColor: Colors.grey[800],
         backgroundColor: Colors.red[300],
         foregroundColor: Colors.white,
-        title: Text('PERSONAL INFO'),
+        title: Text('Temel Bilgiler'),
         centerTitle: true,
       ),
       body: Container(
@@ -61,10 +79,7 @@ class PersonalInfoScreen extends StatelessWidget {
             Center(
               child: Text(
                 'BAHADIR DÖŞER',
-                style: TextStyle(
-                    fontFamily: 'Calibri',
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 10),
@@ -79,9 +94,8 @@ class PersonalInfoScreen extends StatelessWidget {
             SizedBox(height: 10),
             Center(
               child: Text(
-                'Member since 23.03.2021',
+                '23.03.2021 tarihinde katıldı',
                 style: TextStyle(
-                    fontFamily: 'Calibri',
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
                     fontStyle: FontStyle.italic),
@@ -94,7 +108,7 @@ class PersonalInfoScreen extends StatelessWidget {
                 child: Title(
                   color: Colors.black,
                   child: Text(
-                    'BASIC PROFILE',
+                    'Temel Bilgiler',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                 )),
@@ -143,31 +157,47 @@ class PersonalInfoScreen extends StatelessWidget {
                 child: Title(
                   color: Colors.black,
                   child: Text(
-                    'I would like to post :',
+                    'Benim profilim :',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 )),
             SizedBox(height: 10),
-            Center(
+            Container(
+              width: double.infinity,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Adoption',
+                  Text('Sahip Adayı',
                       style: TextStyle(
                           fontWeight: FontWeight.normal,
                           color: Colors.black,
                           fontSize: 20)),
                   SizedBox(width: 20),
                   Switch(
-                    value: true,
+                    value: this._adoptSwitchVal,
                     splashRadius: 10,
+                    onChanged: (bool val) {
+                      setState(() {
+                        _adoptSwitchVal = val;
+                      });
+                    },
                   ),
                   SizedBox(width: 20),
-                  Text('Rehome',
+                  Text('Sahiplendirme',
                       style: TextStyle(
                           fontWeight: FontWeight.normal,
                           color: Colors.black,
                           fontSize: 20))
                 ],
+              ),
+            ),
+            SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text("Detaylı Profilime Git"),
+                onPressed: () {},
               ),
             )
           ],
