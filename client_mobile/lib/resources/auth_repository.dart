@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:client_mobile/models/authresult.dart';
 import 'package:dio/dio.dart';
 
-class AuthProvider {
-  static String mainUrl = "http://10.0.2.2:5000/api/account";
-
-  final Dio _dio = Dio();
-  var loginUrl = '$mainUrl/login';
+class AuthRepository {
+  final Dio dio;
+  AuthRepository(this.dio);
 
   Future<AuthResult> login(String email, String password) async {
     var params = {
@@ -17,8 +13,8 @@ class AuthProvider {
     };
 
     try {
-      Response response = await _dio.post(
-        loginUrl,
+      Response response = await dio.post(
+        'Account/login',
         data: params,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",

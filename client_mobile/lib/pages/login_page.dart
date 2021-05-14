@@ -1,3 +1,4 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:client_mobile/bloc/auth_bloc.dart';
 import 'package:client_mobile/pages/personal_info_page.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  var authBloc = BlocProvider.getBloc<AuthBloc>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            // Image(image: AssetImage("/assets/images/logo.png")),
+                            Image(image: AssetImage("assets/images/logo.png")),
                             TextFormField(
                               controller: _emailController,
                               decoration: const InputDecoration(
@@ -57,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
                                       // If the form is valid, display a snackbar. In the real world,
                                       // you'd often call a server or save the information in a database.
@@ -68,13 +71,16 @@ class _LoginPageState extends State<LoginPage> {
                                                   Text('Giriş yapılıyor...')));
                                     }
 
-                                    authBloc.login(_emailController.text,
+                                    var success = authBloc.login(
+                                        _emailController.text,
                                         _passwordController.text);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                PersonalInfoPage()));
+                                    if (await success) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PersonalInfoPage()));
+                                    }
                                   },
                                   child: Text("Giris")),
                             )

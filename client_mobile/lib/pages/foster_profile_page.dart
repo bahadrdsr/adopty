@@ -1,4 +1,9 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:client_mobile/bloc/foster_bloc.dart';
+import 'package:client_mobile/models/foster_preference.dart';
+import 'package:client_mobile/models/foster_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FosterProfilePage extends StatefulWidget {
   @override
@@ -6,11 +11,16 @@ class FosterProfilePage extends StatefulWidget {
 }
 
 class _FosterProfilePageState extends State<FosterProfilePage> {
-  RangeValues _ageRangeValues = const RangeValues(0, 30);
-  RangeValues _weightRangeValues = const RangeValues(0, 50);
+  TextEditingController minAgeController = TextEditingController();
+
+  final fosterBloc = BlocProvider.getBloc<FosterBloc>();
   bool _hasExperience = false;
+  bool _alreadyHasPets = true;
+  bool _profileInfoExists = true;
+  bool _profilePhotoExists = true;
   @override
   Widget build(BuildContext context) {
+    fosterBloc.getMyFosterProfile();
     return Scaffold(
       backgroundColor: Colors.red[50],
       drawer: Drawer(
@@ -74,193 +84,182 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
         title: Text('Sahiplendirme Profili'),
         centerTitle: true,
       ),
-      body: Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: <Widget>[
-              Row(
+      body: StreamBuilder<FosterProfile>(
+        stream: fosterBloc.fosterProfile,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          FosterProfile profile = snapshot.data as FosterProfile;
+          FosterPreference preference = profile.fosterPreference;
+          minAgeController.text = preference.minimumAge.toString();
+          _alreadyHasPets = preference.alreadyHasPets;
+          _profileInfoExists = preference.profileInfoExists;
+          _profilePhotoExists = preference.profilePhotoExists;
+
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Column(
                 children: [
-                  Text("Beğenilen adaylar : ",
-                      style: TextStyle(color: Colors.black, fontSize: 18)),
-                  Text("5",
-                      style: TextStyle(
-                          color: Colors.red[400],
-                          fontSize: 18,
-                          decoration: TextDecoration.underline)),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Text("Beğenilmeyen adaylar : ",
-                      style: TextStyle(color: Colors.black, fontSize: 18)),
-                  Text("33",
-                      style: TextStyle(
-                          color: Colors.deepOrange[400],
-                          fontSize: 18,
-                          decoration: TextDecoration.underline)),
-                ],
-              ),
-              Divider(
-                color: Colors.black54,
-                height: 50,
-                thickness: 3,
-                indent: 10,
-                endIndent: 10,
-              ),
-              Container(
-                  alignment: Alignment.centerLeft,
-                  child: Title(
-                    color: Colors.black,
-                    child: Text(
-                      'Arama Terchilerim',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                  )),
-              SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Min / Max Yaş : ",
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  RangeSlider(
-                    values: _ageRangeValues,
-                    activeColor: Colors.red[400],
-                    min: 0,
-                    max: 100,
-                    divisions: 15,
-                    labels: RangeLabels(
-                      _ageRangeValues.start.round().toString(),
-                      _ageRangeValues.end.round().toString(),
-                    ),
-                    onChanged: (RangeValues values) {
-                      setState(() {
-                        _ageRangeValues = values;
-                      });
-                    },
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Min / Max Ağırlık : ",
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  RangeSlider(
-                    values: _weightRangeValues,
-                    activeColor: Colors.red[400],
-                    min: 0,
-                    max: 100,
-                    divisions: 15,
-                    labels: RangeLabels(
-                      _weightRangeValues.start.round().toString(),
-                      _weightRangeValues.end.round().toString(),
-                    ),
-                    onChanged: (RangeValues values) {
-                      setState(() {
-                        _weightRangeValues = values;
-                      });
-                    },
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Tecrübeli mi : ",
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  Switch(
-                    value: this._hasExperience,
-                    splashRadius: 10,
-                    onChanged: (bool val) {
-                      setState(() {
-                        _hasExperience = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Başka evcil hayvanı var mı : ",
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  Switch(
-                    value: this._hasExperience,
-                    splashRadius: 10,
-                    onChanged: (bool val) {
-                      setState(() {
-                        _hasExperience = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Profil fotoğrafı var mı : ",
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  Switch(
-                    value: this._hasExperience,
-                    splashRadius: 10,
-                    onChanged: (bool val) {
-                      setState(() {
-                        _hasExperience = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Profil bilgisi var mı : ",
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  Switch(
-                    value: this._hasExperience,
-                    splashRadius: 10,
-                    onChanged: (bool val) {
-                      setState(() {
-                        _hasExperience = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 30),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    child: ElevatedButton(
-                      child: Text("Aramaya başla"),
-                      onPressed: () {},
-                    ),
+                  Row(
+                    children: [
+                      Text("Beğenilen adaylar : ",
+                          style: TextStyle(color: Colors.black, fontSize: 18)),
+                      Text("5",
+                          style: TextStyle(
+                              color: Colors.red[400],
+                              fontSize: 18,
+                              decoration: TextDecoration.underline)),
+                    ],
                   ),
                   SizedBox(
-                    child: ElevatedButton(
-                      child: Text("Ilanlarıma Git"),
-                      onPressed: () {},
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Text("Beğenilmeyen adaylar : ",
+                          style: TextStyle(color: Colors.black, fontSize: 18)),
+                      Text("33",
+                          style: TextStyle(
+                              color: Colors.deepOrange[400],
+                              fontSize: 18,
+                              decoration: TextDecoration.underline)),
+                    ],
+                  ),
+                  Divider(
+                    color: Colors.black54,
+                    height: 50,
+                    thickness: 3,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Container(
+                      alignment: Alignment.centerLeft,
+                      child: Title(
+                        color: Colors.black,
+                        child: Text(
+                          'Terchilerim',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      )),
+                  SizedBox(height: 10),
+                  Container(
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: minAgeController,
+                      decoration: new InputDecoration(labelText: "Min Yaş"),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ], // Only numbers can be entered
                     ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text("Tecrübeli mi : ",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 16))),
+                      Switch(
+                        value: this._hasExperience,
+                        splashRadius: 10,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _hasExperience = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text("Başka evcil hayvanı var mı : ",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 16))),
+                      Switch(
+                        value: this._alreadyHasPets,
+                        splashRadius: 10,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _hasExperience = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text("Profil fotoğrafı var mı : ",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 16))),
+                      Switch(
+                        value: this._profilePhotoExists,
+                        splashRadius: 10,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _hasExperience = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text("Profil bilgisi var mı : ",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 16))),
+                      Switch(
+                        value: this._profileInfoExists,
+                        splashRadius: 10,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _hasExperience = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          child: Text("Aramaya başla"),
+                          onPressed: () {},
+                        ),
+                      ),
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          child: Text("Ilanlarıma Git"),
+                          onPressed: () {},
+                        ),
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
-          )),
+              ));
+        },
+      ),
     );
   }
 }
