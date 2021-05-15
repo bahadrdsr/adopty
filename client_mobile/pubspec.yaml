@@ -38,6 +38,8 @@ dependencies:
   image_picker: ^0.7.4
   bloc_pattern: ^3.0.0
   fluttertoast: ^8.0.6
+  cloudinary_public: ^0.8.1+1
+  photo_card_swiper: ^0.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,6 +56,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/users/
   # fonts:
   #   - family: OpenSans
   #     fonts:

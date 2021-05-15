@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -9,13 +10,15 @@ class FosterPostFormPage extends StatefulWidget {
 
 class _FosterPostFormPageState extends State<FosterPostFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final cloudinary =
+      CloudinaryPublic('dann5o48z', 'UPLOAD_PRESET', cache: false);
   String specieValue = 'Kedi';
   String genderValue = 'Dişi';
   File? _image;
   final picker = ImagePicker();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -195,14 +198,17 @@ class _FosterPostFormPageState extends State<FosterPostFormPage> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Processing Data')));
+
+                    if (_image != null) {
+                      CloudinaryResponse response = await cloudinary.uploadFile(
+                        CloudinaryFile.fromFile(_image!.path,
+                            resourceType: CloudinaryResourceType.Image),
+                      );
                     }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Processing Data')));
                   },
                   child: Text('Oluştur'),
                 ),

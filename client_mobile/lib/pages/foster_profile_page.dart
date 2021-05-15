@@ -2,6 +2,8 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:client_mobile/bloc/foster_bloc.dart';
 import 'package:client_mobile/models/foster_preference.dart';
 import 'package:client_mobile/models/foster_profile.dart';
+import 'package:client_mobile/pages/foster_posts_page.dart';
+import 'package:client_mobile/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -94,10 +96,10 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
           }
           FosterProfile profile = snapshot.data as FosterProfile;
           FosterPreference preference = profile.fosterPreference;
-          minAgeController.text = preference.minimumAge.toString();
-          _alreadyHasPets = preference.alreadyHasPets;
-          _profileInfoExists = preference.profileInfoExists;
-          _profilePhotoExists = preference.profilePhotoExists;
+          // minAgeController.text = preference.minimumAge.toString();
+          // _alreadyHasPets = preference.alreadyHasPets;
+          // _profileInfoExists = preference.profileInfoExists;
+          // _profilePhotoExists = preference.profilePhotoExists;
 
           return Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -166,7 +168,6 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
                                   color: Colors.black, fontSize: 16))),
                       Switch(
                         value: this._hasExperience,
-                        splashRadius: 10,
                         onChanged: (bool val) {
                           setState(() {
                             _hasExperience = val;
@@ -186,10 +187,9 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
                                   color: Colors.black, fontSize: 16))),
                       Switch(
                         value: this._alreadyHasPets,
-                        splashRadius: 10,
                         onChanged: (bool val) {
                           setState(() {
-                            _hasExperience = val;
+                            _alreadyHasPets = val;
                           });
                         },
                       ),
@@ -206,10 +206,9 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
                                   color: Colors.black, fontSize: 16))),
                       Switch(
                         value: this._profilePhotoExists,
-                        splashRadius: 10,
                         onChanged: (bool val) {
                           setState(() {
-                            _hasExperience = val;
+                            _profilePhotoExists = val;
                           });
                         },
                       ),
@@ -226,10 +225,9 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
                                   color: Colors.black, fontSize: 16))),
                       Switch(
                         value: this._profileInfoExists,
-                        splashRadius: 10,
                         onChanged: (bool val) {
                           setState(() {
-                            _hasExperience = val;
+                            _profileInfoExists = val;
                           });
                         },
                       ),
@@ -244,14 +242,24 @@ class _FosterProfilePageState extends State<FosterProfilePage> {
                         width: 150,
                         child: ElevatedButton(
                           child: Text("Aramaya başla"),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchPage()));
+                          },
                         ),
                       ),
                       SizedBox(
                         width: 150,
                         child: ElevatedButton(
                           child: Text("Ilanlarıma Git"),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FosterPostsPage()));
+                          },
                         ),
                       )
                     ],
