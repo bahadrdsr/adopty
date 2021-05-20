@@ -91,7 +91,7 @@ namespace API
             services.AddAuthentication();
             services.AddOpenApiDocument(configure =>
           {
-              configure.Title = "LProject API";
+              configure.Title = "Adopty Web API";
               configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
               {
                   Type = OpenApiSecuritySchemeType.ApiKey,
